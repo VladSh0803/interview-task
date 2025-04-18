@@ -2,6 +2,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
 import sequelize from "./utils/database.js";
+import { validateParam } from "./middlewares/validateParam.js";
+import { validateId } from "./middlewares/validateId.js";
+import { Message } from "./models/message.js";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 // Initialize environment variables
 config();
@@ -11,9 +15,79 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
-// Root route
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Interview task" });
+// Get all messages
+app.get('/messages', async (req, res) => {
+  const messages = await Message.findAll();
+  res.json(messages);
+});
+
+// Get message by ID
+app.get('/messages/:id', validateParam('id'), validateId(), async (req, res, next) => {
+  const message = await Message.findByPk(req['id']);
+  if (!message) {
+    next({
+      statusCode: StatusCodes.NOT_FOUND,
+      message: ReasonPhrases.NOT_FOUND,
+      data: { field: 'id', value: req['id'] },
+    });
+  }
+  res.json(message);
+});
+
+// Create message
+app.post('/messages', async (req, res, next) => {
+  const { text } = req.body;
+
+  if (!text) {
+    next({
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Text is required',
+      data: { field: 'text' },
+    });
+  }
+
+  const message = await Message.create({ text });
+  res.status(StatusCodes.CREATED).json(message);
+});
+
+// Update a message
+app.patch('/messages/:id', validateParam('id'), validateId(), async (req, res, next) => {
+  const message = await Message.findByPk(req['id']);
+  if (!message) {
+    next({
+      statusCode: StatusCodes.NOT_FOUND,
+      message: ReasonPhrases.NOT_FOUND,
+      data: { field: 'id', value: req['id'] },
+    });
+  }
+
+  const { text } = req.body;
+  if (!text) {
+    next({
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Text is required',
+      data: { field: 'text' },
+    });
+  }
+
+  message.text = text;
+  await message.save();
+  res.status(StatusCodes.OK).json(message);
+});
+
+// Delete message
+app.delete('/messages/:id', validateParam('id'), validateId(), async (req, res, next) => {
+  const message = await Message.findByPk(req['id']);
+  if (!message) {
+    next({
+      statusCode: StatusCodes.NOT_FOUND,
+      message: ReasonPhrases.NOT_FOUND,
+      data: { field: 'id', value: req['id'] },
+    });
+  }
+
+  await message.destroy();
+  res.status(StatusCodes.OK).json({ message: 'Message deleted' });
 });
 
 // Global Error Handling Middleware
