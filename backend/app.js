@@ -5,6 +5,7 @@ import sequelize from "./utils/database.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import messages from "./routes/messages.js";
+import cors from 'cors';
 
 config();
 
@@ -41,6 +42,10 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(specs)
 );
+
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
 
 app.use(bodyParser.json());
 
