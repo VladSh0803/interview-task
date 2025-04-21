@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/database.js";
 
-export class Message extends Model {}
+export default class Message extends Model {}
 
 Message.init(
   {
