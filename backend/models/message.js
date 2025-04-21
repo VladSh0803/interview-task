@@ -20,5 +20,6 @@ Message.init(
   },
   {
     sequelize,
+    timestamps: false,
   }
 );
