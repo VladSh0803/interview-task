@@ -1,9 +1,23 @@
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        Interview Task
-      </main>
-    </div>
-  );
+"use client"
+
+import { DataTable } from "@/components/ui/data-table"
+import Spinner from "@/components/ui/spinner"
+import { useGetMessagesQuery } from "@/services/message"
+import { columns } from "@/app/columns"
+
+export default function Messages() {
+    const { isError, isLoading, data, error } = useGetMessagesQuery()
+
+    if (isLoading) return <Spinner />
+    if (isError) {
+        console.log(error)
+        return "Bla"
+    }
+    if (isError || !data) return "So"
+
+    return (
+        <div className="container mx-auto py-10">
+            <DataTable columns={columns} data={data} />
+        </div>
+    )
 }
