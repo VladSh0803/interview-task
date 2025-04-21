@@ -6,9 +6,7 @@ WORKDIR /usr/src/backend
 
 COPY package*.json ./
 
-RUN npm ci
-
-COPY . .
+RUN npm install
 
 EXPOSE 8080
 
