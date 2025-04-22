@@ -1,23 +1,17 @@
-"use client"
-
-import { DataTable } from "@/components/ui/data-table"
-import Spinner from "@/components/ui/spinner"
-import { useGetMessagesQuery } from "@/services/message"
-import { columns } from "@/app/columns"
+import { Button } from "@/components/ui/button"
+import MessagePopup from "./components/message-popup"
+import MessageDataTable from "./components/message-data-table"
 
 export default function Messages() {
-    const { isError, isLoading, data, error } = useGetMessagesQuery()
-
-    if (isLoading) return <Spinner />
-    if (isError) {
-        console.log(error)
-        return "Bla"
-    }
-    if (isError || !data) return "So"
-
     return (
         <div className="container mx-auto py-10">
-            <DataTable columns={columns} data={data} />
+            <div className="bg-white dark:bg-muted rounded-2xl shadow-sm border p-6 space-y-6">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
+                    <MessagePopup trigger={<Button>Add message</Button>} />
+                </div>
+                <MessageDataTable />
+            </div>
         </div>
     )
 }

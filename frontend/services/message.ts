@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { z } from "zod";
 
-const BaseMessage = z.object({
-    text: z.string().length(256)
+export const BaseMessage = z.object({
+    text: z.string().trim().nonempty().max(256)
 });
-const Message = z.object({
+export const Message = z.object({
     id: z.number().int().positive().readonly()
 }).and(BaseMessage)
 
@@ -26,7 +26,7 @@ export const messageApi = createApi({
                         { type: 'Message', id: 'LIST' },
                     ]
                     :
-                    [{ type: 'Message', id: 'LIST' }]
+                    [{ type: 'Message', id: 'LIST' }],
         }),
         getMessageById: builder.query<Message, number>({
             query: (id) => ({ url: `messages/${id}` }),
@@ -59,5 +59,9 @@ export const messageApi = createApi({
 })
 
 export const {
-    useGetMessagesQuery
+    useGetMessagesQuery,
+    useGetMessageByIdQuery,
+    useUpdateMessageMutation,
+    useCreateMessageMutation,
+    useDeleteMessageMutation
 } = messageApi
