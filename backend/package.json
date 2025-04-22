@@ -6,8 +6,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "npm install && node app.js",
+    "dev": "npm ci && nodemon app.js"
   },
   "author": "",
   "dependencies": {
