@@ -52,9 +52,13 @@ export default function MessagePopup(props: MessagePopupProps) {
     function onSubmit(values: BaseMessage): void
     function onSubmit(values: Message | BaseMessage) {
         const mutation = isUninitialized ? () => createMessage(values as BaseMessage) : () => updateMessage(values as Message)
-        mutation().then(() => {
-            setOpen(false)
-        })
+        mutation()
+            .then(() => {
+                setOpen(false)
+            })
+            .catch(() => {
+                form.setError("text", { message: "Something went wrong" });
+            })
     }
 
     return (
