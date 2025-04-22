@@ -17,7 +17,7 @@ type Controlled = { id?: number; open: boolean; setOpen: (open: boolean) => void
 type MessagePopupProps = WithTrigger | Controlled
 
 function isWithTrigger(props: MessagePopupProps): props is WithTrigger {
-  return "trigger" in props
+    return "trigger" in props
 }
 
 export default function MessagePopup(props: MessagePopupProps) {
