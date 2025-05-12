@@ -40,10 +40,6 @@ Aby uruchomić projekt, należy w terminalu w głównym katalogu projektu wpisa�
 docker compose up
 ```
 
-## Dystrybucja
-
-Wynik powinien być wykonany na osobnej gałęzi w prywatnym repozytorium i przesłany jako pull request do użytkownika @BiznesportTech.
-
 ## Dodatkowe wskazówki
 
 - Zadbaj o walidację danych w formularzu.
