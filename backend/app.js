@@ -2,21 +2,55 @@ import express from "express";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
 import sequelize from "./utils/database.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import messages from "./routes/messages.js";
+import cors from 'cors';
 
-// Initialize environment variables
 config();
 
 const app = express();
 
-// Middleware
+const options = {
+  definition: {
+    openapi: "3.1.1",
+    info: {
+      title: "Interview Task Swagger UI",
+      version: "0.1.0",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+    },
+    tags: [
+      {
+        name: "Message"
+      }
+    ],
+    servers: [
+      {
+        url: "http://localhost:8080",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJSDoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
+
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
+
 app.use(bodyParser.json());
 
-// Root route
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Interview task" });
-});
+app.use('/messages', messages);
 
-// Global Error Handling Middleware
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
@@ -25,7 +59,6 @@ app.use((error, req, res, next) => {
   res.status(status).json({ success: false, message: message, data: data });
 });
 
-// DB Connection
 sequelize
   .sync({ alter: true })
   .then(() => {

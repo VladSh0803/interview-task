@@ -1,9 +1,17 @@
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        Interview Task
-      </main>
-    </div>
-  );
+import { Button } from "@/components/ui/button"
+import MessagePopup from "./components/message-popup"
+import MessageDataTable from "./components/message-data-table"
+
+export default function Messages() {
+    return (
+        <div className="container mx-auto py-10">
+            <div className="bg-white dark:bg-muted rounded-2xl shadow-sm border p-6 space-y-6">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
+                    <MessagePopup trigger={<Button>Add message</Button>} />
+                </div>
+                <MessageDataTable />
+            </div>
+        </div>
+    )
 }
